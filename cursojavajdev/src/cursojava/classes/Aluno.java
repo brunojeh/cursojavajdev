@@ -1,34 +1,55 @@
 package cursojava.classes;
 
-public class Aluno {
-	
-	private String nome;
-	private int idade;
-	private String dataNascimento;
-	private String registroGeral;
-	private String numeroCpf;
-	private String nomeMae;
-	private String nomePai;
+import java.util.ArrayList;
+import java.util.List;
+
+import constantes.StatusAluno;
+
+public class Aluno extends Pessoa {
+	// atributos
 	private String dataMatricula;
 	private String nomeEscola;
 	private String serieMatriculado;
-	
-	private double nota1;
-	private double nota2;
-	private double nota3;
-	private double nota4;
-	
+	private List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+
+	// métodos
+	public double getMediaNota() {
+		double somaNotas = 0.0;
+		for (Disciplina disciplina : disciplinas) {
+			somaNotas += disciplina.getMediaNotas();
+		}
+		return somaNotas / disciplinas.size();
+		// return
+		// this.disciplinas.stream().mapToDouble(Disciplina::getNota).average().getAsDouble();
+	}
+
+	/*
+	 * public boolean isAlunoAprovado() { if (this.getMediaNota() >= 70) return
+	 * true; else return false; }
+	 */
+
+	public String getAlunoAprovado() {
+		if (this.getMediaNota() >= 50) {
+			if (this.getMediaNota() >= 70)
+				return StatusAluno.APROVADO;
+			else
+				return StatusAluno.RECUPERACAO;
+		} else
+			return StatusAluno.REPROVADO;
+	}
+
+	// métodos especiais
 	public Aluno() {
-		
+
 	}
-	
-    public Aluno(String nomePadrao) {
-		nome = nomePadrao;
+
+	public Aluno(String nome) {
+		this.nome = nome;
 	}
-    
-    public Aluno(String nomePadrao, int idadePadrao) {
-		nome = nomePadrao;
-		idade = idadePadrao;
+
+	public Aluno(String nomePadrao, Integer idadePadrao) {
+		this.nome = nomePadrao;
+		this.idade = idadePadrao;
 	}
 
 	public String getNome() {
@@ -43,7 +64,7 @@ public class Aluno {
 		return idade;
 	}
 
-	public void setIdade(int idade) {
+	public void setIdade(Integer idade) {
 		this.idade = idade;
 	}
 
@@ -111,42 +132,63 @@ public class Aluno {
 		this.serieMatriculado = serieMatriculado;
 	}
 
-	public double getNota1() {
-		return nota1;
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((numeroCpf == null) ? 0 : numeroCpf.hashCode());
+		return result;
 	}
 
-	public void setNota1(double nota1) {
-		this.nota1 = nota1;
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Aluno other = (Aluno) obj;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (numeroCpf == null) {
+			if (other.numeroCpf != null)
+				return false;
+		} else if (!numeroCpf.equals(other.numeroCpf))
+			return false;
+		return true;
 	}
 
-	public double getNota2() {
-		return nota2;
+	@Override
+	public String toString() {
+		return "Aluno [nome=" + nome + ", idade=" + idade + ", dataNascimento=" + dataNascimento + ", registroGeral="
+				+ registroGeral + ", numeroCpf=" + numeroCpf + ", nomeMae=" + nomeMae + ", nomePai=" + nomePai
+				+ ", dataMatricula=" + dataMatricula + ", nomeEscola=" + nomeEscola + ", serieMatriculado="
+				+ serieMatriculado + ", disciplinas=" + disciplinas + ", Resultado=" + getAlunoAprovado() + "]";
 	}
 
-	public void setNota2(double nota2) {
-		this.nota2 = nota2;
+	public List<Disciplina> getDisciplinas() {
+		return disciplinas;
 	}
 
-	public double getNota3() {
-		return nota3;
-	}
-
-	public void setNota3(double nota3) {
-		this.nota3 = nota3;
-	}
-
-	public double getNota4() {
-		return nota4;
-	}
-
-	public void setNota4(double nota4) {
-		this.nota4 = nota4;
+	public void setDisciplinas(List<Disciplina> disciplinas) {
+		this.disciplinas = disciplinas;
 	}
 	
-	public double getMediaNota() {
-    	return (nota1 + nota2 + nota3 + nota4) / 4;
-    }
-    
-    
+	@Override
+	public boolean pessoaMaiorIdade() {
+		return this.idade >= 21;
+	}
+	
+	public String msgMaiorIdade() {
+		return this.pessoaMaiorIdade() ? "Obaa aluno é maior idade" : "Ixii você é menor de idade";
+	}
+
+	@Override
+	public double salario() {
+		return 0;
+	}
 
 }
